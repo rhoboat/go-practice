@@ -1,3 +1,5 @@
+// run with:
+// # go test -v --bench . --benchmem
 package main
 
 import (
