@@ -1,5 +1,6 @@
 // Demonstrates that atomic counters provide a way to
 // update the same counter with many concurrent goroutines
+// without data race failures.
 package main
 
 import (
