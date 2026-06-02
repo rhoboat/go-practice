@@ -25,9 +25,9 @@ func Stream[T any](ctx context.Context, in []T) <-chan T {
 		defer close(out)
 		for _, element := range in {
 			select {
-				case <-ctx.Done():
-					return
-				case out <- element:
+			case <-ctx.Done():
+				return
+			case out <- element:
 			}
 		}
 	}()
@@ -57,9 +57,9 @@ func Transform[I any, O any](ctx context.Context, transformer func(I) O, in <-ch
 		defer close(out)
 		for element := range in {
 			select {
-				case <-ctx.Done():
-					return
-				case out <- transformer(element):
+			case <-ctx.Done():
+				return
+			case out <- transformer(element):
 			}
 		}
 	}()
@@ -68,12 +68,12 @@ func Transform[I any, O any](ctx context.Context, transformer func(I) O, in <-ch
 
 func Collect[T any](ctx context.Context, in <-chan T) []T {
 	out := make([]T, 0) // TODO: why zero?
-  for element := range in {
+	for element := range in {
 		select {
-			case <-ctx.Done():
-				return out
-			default:
-				out = append(out, element)
+		case <-ctx.Done():
+			return out
+		default:
+			out = append(out, element)
 		}
 	}
 	return out
