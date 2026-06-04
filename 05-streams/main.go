@@ -67,7 +67,7 @@ func Transform[I any, O any](ctx context.Context, transformer func(I) O, in <-ch
 }
 
 func Collect[T any](ctx context.Context, in <-chan T) []T {
-	out := make([]T, 0) // TODO: why zero?
+	out := make([]T, 0) // start with 0 length because we're appending iteratively
 	for element := range in {
 		select {
 		case <-ctx.Done():

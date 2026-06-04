@@ -27,18 +27,7 @@ func main() {
 func occurencesSeq(urls []string) []int {
 	result := make([]int, len(urls))
 	for i, url := range urls {
-		res, err := http.Get(url)
-		if err != nil {
-			log.Fatal(err)
-		}
-		body, err := io.ReadAll(res.Body)
-		res.Body.Close()
-		if res.StatusCode > 299 {
-			log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
-		}
-		if err != nil {
-			log.Fatal(err)
-		}
+		body := getBody(url)
 		c := countWord("generic", body)
 		result[i] = c
 		fmt.Printf("count: %d, word: %s, url: %s\n", c, w, url)
@@ -55,18 +44,7 @@ func occurencesCnc(urls []string) []int {
 	for i, url := range urls {
 		wg.Add(1)
 		go func() {
-			res, err := http.Get(url)
-			if err != nil {
-				log.Fatal(err)
-			}
-			body, err := io.ReadAll(res.Body)
-			res.Body.Close()
-			if res.StatusCode > 299 {
-				log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
-			}
-			if err != nil {
-				log.Fatal(err)
-			}
+			body := getBody(url)
 			c := countWord("generic", body)
 			result[i] = c
 			fmt.Printf("count: %d, word: %s, url: %s\n", c, w, url)
@@ -82,4 +60,20 @@ func countWord(word string, body []byte) int {
 	matches := re.FindAll(body, -1)
 	// fmt.Printf("%q\n", matches)
 	return len(matches)
+}
+
+func getBody(url string) []byte {
+	res, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	body, err := io.ReadAll(res.Body)
+	res.Body.Close()
+	if res.StatusCode > 299 {
+		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
+	return body
 }

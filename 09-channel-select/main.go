@@ -22,8 +22,9 @@ func main() {
 		chan2 <- 2
 	}()
 
-	// even if the following is not run,
-	for range 2 { // without range 2, this will never end, leading to panic when goroutines are asleep (channels have no messages)
+	// even if the following is not run, there is no error.
+	// unbuffered channels can be sent to even if they're not received from
+	for range 2 { // without range <= 2, this will never end, leading to panic when goroutines are asleep (channels have no messages)
 		select {
 		case thingy := <-chan1:
 			fmt.Println(thingy)
