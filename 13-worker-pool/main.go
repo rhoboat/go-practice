@@ -22,13 +22,15 @@ func main() {
 	// send jobs
 	for i := range numJobs {
 		jobs <- i
+		fmt.Println("sent", i)
 	}
 	// close(jobs) // don't actually need to close
 
-	// receive results
+	// this <-results causes main to sync with goroutines!
 	for range numJobs {
 		fmt.Print(<-results, " ")
 	}
+
 	// NOTE: Why doesn't this work?
 	// Range over channels only works if the channel is terminated
 	// We can't call close(results) because workers are still working at this moment.

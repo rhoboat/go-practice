@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func main() {
@@ -24,6 +25,7 @@ func main() {
 
 	// concurrent sends
 	for i := range 5 {
+		time.Sleep(time.Second)
 		fmt.Println("sent", i)
 		msgs <- i
 	}

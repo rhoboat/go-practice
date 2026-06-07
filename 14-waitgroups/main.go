@@ -25,15 +25,16 @@ func main() {
 	// send jobs
 	for i := range numJobs {
 		jobs <- i
+		fmt.Println("sent", i)
 	}
 	close(jobs) // NOTE: need to close the sender!
+
+	wg.Wait()
 
 	// receive results
 	for range numJobs {
 		fmt.Print(<-results, " ")
 	}
-
-	wg.Wait()
 }
 
 // receive jobs, send results

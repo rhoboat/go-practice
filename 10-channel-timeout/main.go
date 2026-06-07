@@ -11,15 +11,15 @@ const timeout = 2
 const lrf = 3
 
 func main() {
-	chan2 := make(chan int, 1) // buffered, so the send is nonblocking, which means we don't need goroutine
+	ch := make(chan int, 1) // buffered, so the send is nonblocking, which means we don't need goroutine
 	go func() {
 		time.Sleep(time.Second * lrf) // long running function
-		chan2 <- 2
+		ch <- 1
 	}()
 
 	// select implements timeout
 	select {
-	case thingy := <-chan2:
+	case thingy := <-ch:
 		fmt.Println(thingy)
 	case <-time.After(time.Second * timeout):
 		fmt.Println("timed out")
